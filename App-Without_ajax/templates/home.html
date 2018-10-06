@@ -1,0 +1,45 @@
+<html>
+<head>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{{url_for('static', filename='autocomplete.js')}}"></script>
+
+<head>
+
+<div class="container">
+	<div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div id="imaginary_container"> 
+                <div class="input-group stylish-input-group">
+                <h2>Instant Search</h2>
+                    <p><b>Search Results:</b></p>
+                    {% for result in results %}
+                    <tr>
+                      <th colspan = "3">Suggested Word : {{ result[0] }} </th> 
+                      <th colspan = "3"> relevance score : {{result[1]}} </th>
+                      <br>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    {% from "_formhelpers.html" import render_field %}
+                    <form method=post id="searchbar">
+                      <dl>
+                        {{ render_field(form.no_of_suggestions) }}
+                        <p>
+                        {{ render_field(form.select) }}
+                        <p>
+                        {{ render_field(form.search) }}
+                      </dl>
+                      <p><input type=submit value=Search>
+                      <p><b>Search Query Time (in msec ): {{ querytime }} </b></p>
+                    </form>
+                    </span>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Instant Search Toolbar</title>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    <script>
+      function ajaxfunction(value)
+      {
+        value = value.trim(); // remove any spaces around the text
+        if(value != ""){ // don't make requests with an empty string
+          $.ajax(
+          {
+            url: "search",
+            data: {searchText: value},
+            dataType: "json",
+            success: function(data)
+            {
+              var res = "<b>"+"Suggested Words"+"</b>";
+              // create the html with results
+              for(i in data.results){
+                res += "<div>"+data.results[i][0]+" : <b>jaccard score</b>:"+data.results[i][1]+"</div>";
+              }
+              time_taken = "<br>"+"<b>"+"Time taken to query(in msec):" + "</b>"+data.querytime+"<br>"
+              $("#results").html(res);
+              $('#time_taken').html(time_taken)
+            }
+
+          });
+        }
+        else{
+          $("#results").html(""); // set the results empty in case of empty string
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Instant Search Toolbar</h1>
+    <input type="text" onkeyup="ajaxfunction(this.value)"> <!-- Assigns the key up event to call the liveSearch() function -->
+    <br>
+    <div id="results"><b>Suggested Words: </b></div> <!-- Results will be printed here -->
+    <div id="time_taken"><b>Time taken to query(in msec): </b></div>
+  </body>
+</html>
