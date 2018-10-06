@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import time
+import os
 # import
 
 
@@ -52,7 +54,10 @@ class Trie:
 
 
 def get_best_matches(trie, string, no=3):
+    t1 = time.time()
     results = list(trie.all_words_beginning_with_prefix(string))
+    t2 = time.time()
+    print("time_taken for query:" + str(t2 - t1))
     return results[:no]
 
 
@@ -61,8 +66,34 @@ def loadData(filename):
     df = pd.read_csv(filename, header=0, sep=',',
                      engine='python', error_bad_lines=False)
     print(df.shape)
+    df = df.fillna(' ')
+    df['Name'] = df['givenName'].astype(
+        str) + df['middleName'].astype(str) + df['surname'].astype(str)
+
+    # print(df['Name'])
+    return df
+
+
+def populate_Trie(df):
+    d = df.values.T
+    t1 = Trie()
+    t2 = Trie()
+    t3 = Trie()
+    t4 = Trie()
+    for i in d[0]:
+        t1.insert(str(i))
+    for i in d[1]:
+        t2.insert(str(i))
+    for i in d[2]:
+        t3.insert(str(i))
+    for i in d[3]:
+        t4.insert(str(i))
+
+    return (t1, t2, t3, t4)
 
 if __name__ == '__main__':
 
-    loadData('data.csv')
-    print(get_best_matches(trie, 'foo'))
+    df = loadData('data.csv')
+    (t1, t2, t3, t4) = populate_Trie(df)
+    print(get_best_matches(t1, 'Mah'))
+    print(t1.search('Mahjabeen'))
